@@ -1,17 +1,23 @@
 import axios from "axios";
 
-export function createUser(userData) {
+
+
+export function createUser(name,email,password) {
   const serverURL = "http://localhost:4000";
-  return new Promise(async (resolve) => {
-    const response = await fetch(`${serverURL}/api/v1/register`, {
-      method: "POST",
-      body: JSON.stringify(userData),
-      headers: { "content-type": "application/json" },
-    });
-    const data = await response.json();
-    resolve({ data });
+  
+  return axios.post(`${serverURL}/api/v1/register`, { name,email, password },{
+    headers: { "Content-Type": "application/json" },
+  })
+  .then(response => {
+    return { data: response.data };
+  })
+  .catch(error => {
+    // Handle error or throw it further if needed
+    throw error;
   });
 }
+
+
 
 
 export async function loginUser(email, password) {
@@ -19,7 +25,6 @@ export async function loginUser(email, password) {
   const config = {
     headers: {
       'Content-Type': 'application/json'
-      // Add other headers if needed
     }
   };
 
