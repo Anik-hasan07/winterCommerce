@@ -7,6 +7,8 @@ import WebFont from "webfontloader";
 import Footer from './component/layout/Footer/Footer.jsx';
 import { ToastContainer } from "react-toastify";
 import ProductDetails from './component/Product/ProductDetails.jsx';
+import LoginSignUp from './component/User/LoginSignUp.jsx';
+
 
 function App() {
   useEffect(() => {
@@ -24,6 +26,7 @@ function App() {
       <Routes>
       <Route  path="/" element = {<Home/>}/>
       <Route  path="/product/:id" element = {<ProductDetails/>}/>
+      <Route  path="/login" element = {<LoginSignUp/>}/>
       </Routes>
       <Footer/>
     </Router>
