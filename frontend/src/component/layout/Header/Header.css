@@ -1,0 +1,53 @@
+.speedDial {
+  position: fixed;
+  right: 3vmax;
+  top: 3vmax;
+}
+
+.speedDialIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 100%;
+}
+
+.navbar {
+  background-color: black;
+  padding: 15px 20px;
+  width: 100%;
+  transition: background-color 0.3s ease-in-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+
+.scrolled {
+  background-color: #222; /* Change this to the desired color */
+  padding: 10px 20px; /* Adjust padding if needed */
+}
+
+.nav-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.nav-item {
+  margin-right: 15px;
+}
+
+.nav-item a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+.nav-item input[type="text"] {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 50%;
+}
