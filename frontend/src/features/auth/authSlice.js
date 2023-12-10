@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { createUser, loginUser } from './authApi';
+import { createUser, loadUser, loginUser, logoutUser, updateUser } from './authApi';
 
 
 const initialState = {
   user:{},
   status: 'idle',
   isAuthenticated: false,
+  isUpdate:{},
   error:null
 };
 
@@ -22,6 +23,29 @@ export const loginUserAsync = createAsyncThunk(
   'auth/loginUser',
   async ({email,password}) => {
     const response = await loginUser(email,password);
+    console.log("response.data----",response.user);
+    return response.user;
+  }
+);
+export const loadUserAsync = createAsyncThunk(
+  'auth/loadUser',
+  async () => {
+    const response = await loadUser();
+    return response.user;
+  }
+);
+export const logoutUserAsync = createAsyncThunk(
+  'auth/logoutUser',
+  async () => {
+    const response = await logoutUser();
+    return response.user;
+  }
+);
+export const updateUserAsync = createAsyncThunk(
+  'auth/updateUser',
+  async ({name,email}) => {
+    const response = await updateUser(name,email);
+    console.log("-----------updateUserAsync",response)
     return response.data;
   }
 );
@@ -34,6 +58,9 @@ export const authSlice = createSlice({
   reducers: {
     setError: (state, action) => {
         state.error = action.payload; 
+    },
+    resetUpdateStatus: (state) => {
+      state.isUpdated = false;
     },
   },
   extraReducers: (builder) => {
@@ -74,9 +101,58 @@ export const authSlice = createSlice({
         state.isAuthenticated = false;
         state.user = null
       })
+
+
+
+      .addCase(loadUserAsync.pending, (state) => {
+        state.status = 'loading';
+        state.isAuthenticated = false;
+      })
+      .addCase(loadUserAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.isAuthenticated = true;
+        state.user=action.payload;
+      })
+      .addCase(loadUserAsync.rejected, (state, action) => {
+        state.status = 'idle';
+        state.error = action.payload;
+        state.isAuthenticated = false;
+        state.user = null
+      })
+
+
+      .addCase(logoutUserAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.isAuthenticated = true;
+        state.user=action.payload;
+      })
+      .addCase(logoutUserAsync.rejected, (state, action) => {
+        state.status = 'idle';
+        state.error = action.payload;
+        state.isAuthenticated = false;
+      })
+
+
+
+
+      .addCase(updateUserAsync.pending, (state) => {
+        state.status = 'loading';
+        state.isAuthenticated = false;
+      })
+      .addCase(updateUserAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        // state.isUpdate = action.payload; 
+        state.isAuthenticated = true; 
+      })
+      .addCase(updateUserAsync.rejected, (state, action) => {
+        state.status = 'idle';
+        state.error = action.payload;
+        state.isAuthenticated = false;
+     
+      })
   },
 });
 
 
-export const { setError } = authSlice.actions;
+export const { setError,resetUpdateStatus } = authSlice.actions;
 export default authSlice.reducer;

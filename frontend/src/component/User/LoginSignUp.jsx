@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState, useEffect } from "react";
+import { Fragment, useRef,useEffect } from "react";
 import "./LoginSignUp.css";
 import { useNavigate } from "react-router-dom";
 import Loader from "../layout/Loader/Loader";
@@ -39,7 +39,7 @@ const LoginSignUp = () => {
     }
 
     if (isAuthenticated) {
-      navigate("/");
+      navigate("/account");
     }
   }, [dispatch, error, isAuthenticated, navigate]);
 
