@@ -3,7 +3,6 @@ export function fetchAllProducts() {
     return new Promise(async (resolve) =>{
       const response = await fetch(`${serverURL}/api/v1/products`);
       const data = await response.json()
-      console.log("-----data",data);
       resolve({data})
     }
     );
