@@ -26,6 +26,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   });
   sendToken(user, 201, res);
 });
+
 // Login User
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
@@ -52,52 +53,6 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 
-// Login User
-// exports.loginUser = catchAsyncErrors(async (req, res, next) => {
-//   const { email, password } = req.body;
-
-//   if (!email || !password) {
-//     return next(new ErrorHander("Please Enter Email & Password", 400));
-//   }
-
-//   try {
-//     const user = await User.findOne({ email });
-
-//     if (!user) {
-//       return next(new ErrorHander("Invalid email or password", 401));
-//     }
-
-//     const isValidPassword = await bcrypt.compare(password, user.password);
-
-//     if (!isValidPassword) {
-//       return next(new ErrorHander("Invalid email or password", 401));
-//     }
-
-//     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-//       expiresIn: "5d",
-//     });
-
-//     const options = {
-//       expiresIn: new Date(
-//         Date.now() + process.env.COOKIE_EXPIRATION * 24 * 60 * 60 * 1000
-//       ),
-//       httpOnly: true,
-//     };
-
-//     res
-//       .status(200)
-//       .cookie("token", token, options)
-//       .json({
-//         user,
-//         message: "Login successful!",
-//         access_token: token,
-//       });
-//   } catch (error) {
-//     return next(new ErrorHander("Error logging in", 500));
-//   }
-// });
-
-
 // Logout User
 exports.logout = catchAsyncErrors(async (req, res, next) => {
   res.cookie("token", null, {
@@ -110,48 +65,7 @@ exports.logout = catchAsyncErrors(async (req, res, next) => {
     message: "Logged Out",
   });
 });
-//Forgot Password
-// exports.fotgotPassword = catchAsyncErrors(async (req, res, next) => {
-//   const { email } = req.body;
-//   const user = await User.findOne({ email });
-//   if (!user) {
-//     return next(new ErrorHander("Invalid email or password", 401));
-//   }
-//   const token = jwt.sign(
-//     {
-//       id: user.id,
-//     },
-//     process.env.JWT_SECRET,
-//     {
-//       expiresIn: "5d",
-//     }
-//   );
-//   var transporter = nodemailer.createTransport({
-//     service: "gmail",
-//     auth: {
-//       user: "iamakashcse@gmail.com",
-//       pass: "cdgb tpna vhvn evkp",
-//     },
-//   });
 
-//   var mailOptions = {
-//     from: "iamakashcse@gmail.com",
-//     to: "adientertainment352@gmail.com",
-//     subject: "Reset your password",
-//     html:
-//       'click here and <a href="http://127.0.0.1:3000/api/v1/reset-password?token=' +
-//       token +
-//       '"> reset your password</a>',
-//   };
-
-//   transporter.sendMail(mailOptions, function (error, info) {
-//     if (error) {
-//       console.log(error);
-//     } else {
-//       return res.send({ Status: `Email sent to ${user.email} successfully` });
-//     }
-//   });
-// });
 // Forgot Password
 exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
@@ -193,59 +107,6 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Reset Password
-// exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
-//   const {email} = req.body;
-//   const tokenData = await User.findOne({ email });
-//   if (tokenData) {
-//     const password = req.body.password;
-//     let salt = bcrypt.genSaltSync(10);
-//     const newPassword = await bcrypt.hash(password, salt);
-//     const userData = await User.findByIdAndUpdate(
-//       { _id: tokenData._id },
-//       { $set: { password: newPassword } },
-//       { new: true }
-//     );
-//     res
-//       .status(200)
-//       .json({
-//         success: true,
-//         message: "User password had beer reset",
-//         data: userData,
-//       });
-//   }
-// });
-// exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
-//   const { email, password } = req.body;
-  
-//   const user = await User.findOne({ email });
-  
-//   if (user) {
-//     const salt = bcrypt.genSaltSync(10);
-//     const newPassword = await bcrypt.hash(password, salt);
-
-//     // Generate a reset token (this is an example, adjust as needed)
-//     const resetToken = crypto.randomBytes(20).toString('hex');
-    
-//     // Set the new password and reset token details
-//     user.password = newPassword;
-//     user.resetPasswordToken = undefined;
-//     user.resetPasswordExpire = undefined;
-    
-//     await user.save();
-
-//     res.status(200).json({
-//       success: true,
-//       message: "User password has been reset",
-//       data: user,
-//     });
-//   } else {
-//     // Handle case where user with the provided email isn't found
-//     res.status(404).json({
-//       success: false,
-//       message: "User not found",
-//     });
-//   }
-// });// Reset Password
 exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
   // creating token hash
   const resetPasswordToken = crypto
@@ -279,6 +140,7 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 
   sendToken(user, 200, res);
 });
+
 // Get User Detail
 exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
@@ -288,6 +150,7 @@ exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
     user,
   });
 });
+
 // update User password
 exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
@@ -314,15 +177,26 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
   };
-  //cloudinary
-  const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
-    new: true,
-    runValidators: true,
-    useFindAndModify: false,
-  });
+
+
+  // const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+  //   new: true,
+  //   runValidators: true,
+  //   useFindAndModify: false,
+  // });
+  const user = await User.findOne({ email: req.body.email }, newUserData, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
+  if (!req.user || !req.user.email) {
+    return res.status(401).json({ success: false, message: 'User not authenticated' });
+  }
+  
 
   res.status(200).json({
     success: true,
+    user
   });
 
 })

@@ -13,13 +13,15 @@ import { loadUserAsync } from './features/auth/authSlice.js';
 import UserOptions from './component/layout/Header/UserOptions.jsx';
 import Profile from './component/User/Profile.jsx';
 import UpdateProfile from './component/User/UpdateProfile.jsx';
+import UpdatePassword from './component/User/UpdatePassword.jsx';
+import ForgotPassword from './component/User/ForgotPassword.jsx';
 
 
 function App() {
   const dispatch =useDispatch()
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const user = useSelector((state) => state.auth.user);
-  console.log("------user",user);
+  console.log("------isAuthenticated----",isAuthenticated);
   useEffect(() => {
     WebFont.load({
       google: {
@@ -44,6 +46,8 @@ function App() {
       <Route  path="/login" element = {<LoginSignUp/>}/>
       <Route  path="/account" element = {<Profile/>}/>
       <Route  path="/me/update" element = {<UpdateProfile/>}/>
+      <Route  path="/password/update" element = {<UpdatePassword/>}/>
+      <Route  path="/password/forgot" element = {<ForgotPassword/>}/>
       </Routes>
       <Footer/>
     </Router>

@@ -3,10 +3,10 @@ import { createUser, loadUser, loginUser, logoutUser, updateUser } from './authA
 
 
 const initialState = {
-  user:{},
+  user:null,
   status: 'idle',
   isAuthenticated: false,
-  isUpdate:{},
+  isUpdated:null,
   error:null
 };
 
@@ -53,7 +53,7 @@ export const updateUserAsync = createAsyncThunk(
 
 
 export const authSlice = createSlice({
-  name: 'user',
+  name: 'auth',
   initialState,
   reducers: {
     setError: (state, action) => {
@@ -137,17 +137,17 @@ export const authSlice = createSlice({
 
       .addCase(updateUserAsync.pending, (state) => {
         state.status = 'loading';
-        state.isAuthenticated = false;
+        state.error = null;
       })
       .addCase(updateUserAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        // state.isUpdate = action.payload; 
-        state.isAuthenticated = true; 
+        // state.user= action.payload; 
+        state.isUpdated = action.payload;
+        state.error = null;
       })
       .addCase(updateUserAsync.rejected, (state, action) => {
-        state.status = 'idle';
+        state.loading = false;
         state.error = action.payload;
-        state.isAuthenticated = false;
      
       })
   },
